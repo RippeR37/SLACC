@@ -1,0 +1,15 @@
+*.sdf
+*.opensdf
+*.pdb
+*.dll
+*.lib
+*.exe
+*.log
+*.ilk
+*.suo
+*.exp
+
+bin/*
+personal/*
+
+project/msvc/Build/*
