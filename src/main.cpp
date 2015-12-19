@@ -44,7 +44,7 @@ int main() {
     // Executing commands
     cmd.execute("print something"); // print("something")
     cmd.execute("print something else"); //print("something else")
-    cmd.execute("print2 something something else"); // print2("something", "something else")
+    cmd.execute(" \t \r\n   print2 something something else"); // print2("something", "something else")
     cmd.execute("sum 1 7"); // sum(1, 7)
     cmd.execute("sum 3 9"); // sum(3, 9)
 
