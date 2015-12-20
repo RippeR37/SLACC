@@ -32,7 +32,7 @@ namespace Parser
          * Basic Parser
          */
         template<typename... Ts>
-        void parse(std::function<void(Ts...)> func, const std::string& cmdArgs) {
+        void parse(const std::function<void(Ts...)>& func, const std::string& cmdArgs) {
             // Remove references in types to avoid conversion problems
             std::tuple<typename std::remove_reference<Ts>::type...> tupledArgs =
                 detail::ArgToTupleSplitter<typename std::remove_reference<Ts>::type...>(cmdArgs);
@@ -45,7 +45,7 @@ namespace Parser
          *                Any passed arguments are ignored.
          */
         template<>
-        void parse<>(std::function<void()> func, const std::string& cmdArgs) {
+        void parse<>(const std::function<void()>& func, const std::string& cmdArgs) {
             (void) cmdArgs; // unused parameter warning
 
             func();
@@ -105,15 +105,6 @@ namespace Parser
              */
             template<typename T, typename U, typename... Args>
             std::tuple<T, U, Args...> ArgToTupleSplitter(const std::string& str) {
-                /*
-                std::size_t delimiter_pos = str.find_first_of(' ');
-                std::string this_str = str, next_str = "";
-
-                if(delimiter_pos != std::string::npos) {
-                    this_str = str.substr(0, delimiter_pos);
-                    next_str = str.substr(delimiter_pos + 1);
-                }
-                */
                 std::tuple<std::string, std::string> parsedArgs = parseFirstArg(str);
                 std::string& this_arg  = std::get<0>(parsedArgs);
                 std::string& rest_args = std::get<1>(parsedArgs);
