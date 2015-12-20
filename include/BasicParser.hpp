@@ -5,7 +5,7 @@
 #include <functional>
 #include <tuple>
 
-#include "CmdArgApplyer.hpp"
+#include "CmdArgApplier.hpp"
 #include "CmdArgConverter.hpp"
 
 
@@ -37,7 +37,7 @@ namespace Parser
             std::tuple<typename std::remove_reference<Ts>::type...> tupledArgs =
                 detail::ArgToTupleSplitter<typename std::remove_reference<Ts>::type...>(cmdArgs);
 
-            CmdArgApplyer::apply(func, tupledArgs);
+            CmdArgApplier::apply(func, tupledArgs);
         }
 
         /**

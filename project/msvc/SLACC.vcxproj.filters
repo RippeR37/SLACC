@@ -20,7 +20,7 @@
     <ClInclude Include="..\..\include\CommandConsole.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\CmdArgApplyer.hpp">
+    <ClInclude Include="..\..\include\CmdArgApplier.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

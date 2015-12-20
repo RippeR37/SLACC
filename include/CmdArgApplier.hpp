@@ -7,7 +7,7 @@
 namespace Parser
 {
 
-    namespace CmdArgApplyer
+    namespace CmdArgApplier
     {
         /**
          * Forward declaration
@@ -15,16 +15,16 @@ namespace Parser
         namespace detail
         {
             template <std::size_t N>
-            struct CmdArgApplyer_Helper;
+            struct CmdArgApplier_Helper;
         }
 
 
         /**
-         * CmdArgApplyer
+         * CmdArgApplier
          */
         template<typename Func, typename... Args>
         void apply(const Func& func, const std::tuple<Args...>& args) {
-            detail::CmdArgApplyer_Helper< std::tuple_size<std::tuple<Func, Args...>>::value - 1 >::apply(func, args);
+            detail::CmdArgApplier_Helper< std::tuple_size<std::tuple<Func, Args...>>::value - 1 >::apply(func, args);
         }
 
 
@@ -35,16 +35,16 @@ namespace Parser
         namespace detail
         {
             template <std::size_t N>
-            struct CmdArgApplyer_Helper
+            struct CmdArgApplier_Helper
             {
                 template <typename Func, typename Tuple, typename... Args>
                 static void apply(const Func& func, const Tuple& tuple, const Args&... args) {
-                    CmdArgApplyer_Helper<N - 1>::apply(func, tuple, std::get<N - 1>(tuple), args...);
+                    CmdArgApplier_Helper<N - 1>::apply(func, tuple, std::get<N - 1>(tuple), args...);
                 }
             };
 
             template <>
-            struct CmdArgApplyer_Helper<0>
+            struct CmdArgApplier_Helper<0>
             {
                 template <typename Func, typename Tuple, typename... Args>
                 static void apply(const Func& func, const Tuple& tuple, const Args&... args) {
