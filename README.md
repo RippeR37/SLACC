@@ -21,13 +21,13 @@ auto func3_lambda = [](int x, float y, const std::string& z) {
 
 CommandConsole cmd;
 
-cmd.push("func1", func_ptr);      // default parser, types are infered from function pointer
-cmd.push("func2", func2_wrapper); // default parser, types are infered from std::function wrapper
+cmd.bind("func1", func_ptr);      // default parser, types are infered from function pointer
+cmd.bind("func2", func2_wrapper); // default parser, types are infered from std::function wrapper
 // to use lambda, either wrap it in std::function or provide valid parser
-cmd.push("func3", func3_lambda, Parser::BasicParser::parse<int, float, std::string>);
+cmd.bind("func3", func3_lambda, Parser::BasicParser::parse<int, float, std::string>);
 
 cmd.execute("func1 John"); // func1_ptr("John")
-cmd.execute("func2 9.0f"); // func2_wrapper(9.0f)
+cmd.execute("func2 11.0"); // func2_wrapper(11.0f)
 cmd.execute("func3 0 3.14 \"hello world\""); // func3_lambda(0, 3.14f, "hello world")
 ```
 

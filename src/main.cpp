@@ -35,16 +35,17 @@ std::function<void(double, double)> mult_f = [](double x, double y) {
 
 
 // Parser example (parses string as two integers separated by first space)
-std::function<void(void)> sumParser(const std::function<void(int, int)> f, const std::string& args) {
+void sumParser(const std::function<void(int, int)> f, const std::string& args) {
     std::size_t delimiter_pos = args.find_first_of(' ');
-    std::string arg0 = "", arg1 = ""; int iarg0, iarg1;
+    std::string arg0 = "", arg1 = "";
+    int iarg0 = 0, iarg1 = 0;
 
     if(delimiter_pos != std::string::npos && delimiter_pos > 0) {
         arg0 = args.substr(0, delimiter_pos);   iarg0 = std::stoi(arg0);
         arg1 = args.substr(delimiter_pos + 1);  iarg1 = std::stoi(arg1);
     }
 
-    return std::bind(f, iarg0, iarg1);
+    f(iarg0, iarg1);
 }
 
 
@@ -53,17 +54,17 @@ int main() {
 
 
     // Bind commands with default parser (function pointers or std::function wrappers only!)
-    cmd.push("helloworld", helloWorld);
-    cmd.push("print", print_1);
-    cmd.push("mult",  mult_f);
+    cmd.bind("helloworld", helloWorld);
+    cmd.bind("print", print_1);
+    cmd.bind("mult", mult_f);
 
     // Bind commands with provided parser
-    cmd.push("print2", print_2, Parser::BasicParser::parse<std::string, std::string>);
-    cmd.push("sum", sum, sumParser);
+    cmd.bind("print2", print_2, Parser::BasicParser::parse<std::string, std::string>);
+    cmd.bind("sum", sum, sumParser);
 
     // Bind commands to lambda functions or functor objects (either wrapped in std::function or pass explicit parser)
-    cmd.push("sqrt", std::function<void(double)>(sqrt_lambda));
-    cmd.push("sqrt", sqrt_lambda, Parser::BasicParser::parse<double>);
+    cmd.bind("sqrt", std::function<void(double)>(sqrt_lambda));
+    cmd.bind("sqrt", sqrt_lambda, Parser::BasicParser::parse<double>);
 
 
     // Executing commands

@@ -36,20 +36,6 @@ namespace Parser
         };
 
         /**
-         * String to string converter
-         */
-        template<>
-        class CmdArgConvert<std::string, std::string> {
-        public:
-            std::string operator()(const std::string& from) {
-                std::size_t i = from.find_first_not_of(" \t\r\n");
-                std::size_t j = from.find_last_not_of(" \t\r\n") + 1;
-
-                return from.substr(i, j - i);
-            }
-        };
-
-        /**
          * String to unsigned int converter
          */
         template<>

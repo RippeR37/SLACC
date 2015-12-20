@@ -82,7 +82,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\BasicParser.hpp" />
-    <ClInclude Include="..\..\include\CmdArgBinder.hpp" />
+    <ClInclude Include="..\..\include\CmdArgApplyer.hpp" />
     <ClInclude Include="..\..\include\CmdArgConverter.hpp" />
     <ClInclude Include="..\..\include\CommandConsole.hpp" />
   </ItemGroup>

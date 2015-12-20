@@ -5,7 +5,7 @@
 #include <functional>
 #include <tuple>
 
-#include "CmdArgBinder.hpp"
+#include "CmdArgApplyer.hpp"
 #include "CmdArgConverter.hpp"
 
 
@@ -32,12 +32,12 @@ namespace Parser
          * Basic Parser
          */
         template<typename... Ts>
-        std::function<void(void)> parse(std::function<void(Ts...)> func, const std::string& cmdArgs) {
+        void parse(std::function<void(Ts...)> func, const std::string& cmdArgs) {
             // Remove references in types to avoid conversion problems
             std::tuple<typename std::remove_reference<Ts>::type...> tupledArgs =
                 detail::ArgToTupleSplitter<typename std::remove_reference<Ts>::type...>(cmdArgs);
 
-            return CmdArgBinder::bind(func, tupledArgs);
+            CmdArgApplyer::apply(func, tupledArgs);
         }
 
         /**
@@ -45,9 +45,10 @@ namespace Parser
          *                Any passed arguments are ignored.
          */
         template<>
-        std::function<void(void)> parse<>(std::function<void()> func, const std::string& cmdArgs) {
+        void parse<>(std::function<void()> func, const std::string& cmdArgs) {
             (void) cmdArgs; // unused parameter warning
-            return func;
+
+            func();
         }
 
         /**
