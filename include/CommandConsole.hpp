@@ -3,14 +3,31 @@
 #include <functional>
 #include <map>
 
+#include "BasicParser.hpp"
+
 
 class CommandConsole {
     public:
+        // Push command with custom parser
         template<typename Func, typename FuncParser>
-        void push(const std::string& cmdName, Func& func, FuncParser& funcParser) {
+        void push(const std::string& cmdName, const Func& func, const FuncParser& funcParser) {
             _command_parsers[cmdName] = std::bind(funcParser, func, std::placeholders::_1);
         }
 
+        // Push command with default (basic) parser - std::function wrapper
+        template<typename... FuncArgs>
+        void push(const std::string& cmdName, const std::function<void(FuncArgs...)>& func) {
+            push(cmdName, func, Parser::BasicParser::parse<FuncArgs...>);
+        }
+
+        // Push command with default (basic) parser - function pointer
+        template<typename... FuncArgs>
+        void push(const std::string& cmdName, void(*func)(FuncArgs...)) {
+            push(cmdName, func, Parser::BasicParser::parse<FuncArgs...>);
+        }
+
+
+        // Execute command with given arguments
         void execute(const std::string& command) {
             std::size_t name_str = command.find_first_not_of(" \t\r\n");
             std::size_t name_end = command.find_first_of(" \t\r\n", name_str);

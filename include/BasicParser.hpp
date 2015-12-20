@@ -33,7 +33,9 @@ namespace Parser
          */
         template<typename... Ts>
         std::function<void(void)> parse(std::function<void(Ts...)> func, const std::string& cmdArgs) {
-            std::tuple<Ts...> tupledArgs = detail::ArgToTupleSplitter<Ts...>(cmdArgs);
+            // Remove references in types to avoid conversion problems
+            std::tuple<typename std::remove_reference<Ts>::type...> tupledArgs =
+                detail::ArgToTupleSplitter<typename std::remove_reference<Ts>::type...>(cmdArgs);
 
             return CmdArgBinder::bind(func, tupledArgs);
         }
