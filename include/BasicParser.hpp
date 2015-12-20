@@ -41,6 +41,16 @@ namespace Parser
         }
 
         /**
+         * Basic parser - Specialization for commands with 0 arguments.
+         *                Any passed arguments are ignored.
+         */
+        template<>
+        std::function<void(void)> parse<>(std::function<void()> func, const std::string& cmdArgs) {
+            (void) cmdArgs; // unused parameter warning
+            return func;
+        }
+
+        /**
          * Basic argument parsing - returns tuple <arg0, rest>
          */
         std::tuple<std::string, std::string> parseFirstArg(const std::string& args) {
@@ -86,7 +96,7 @@ namespace Parser
         {
             /**
              * ArgToTupleSplitter<T, U, Args...> - splits arguments in std::string to std::tuple<T, U, Args...> between whitespaces.
-             *                                     last argument uses what's left in argument list
+             *                                     Last argument uses what's left in argument list.
              *
              * T - current argument type
              * U - next argument type

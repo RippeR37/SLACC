@@ -1,23 +1,35 @@
 ## SLACC - Simple Lightweight Adaptable Command Console
 
 
-Simple command console module written in C++11. This module have zero dependencies. It uses heavily (variadic) templates to provide nice API, like below:
+Command console module written in C++11 for use as in-game console module or simple scripting engine. 
+
+This module have zero dependencies so it's super easy to use in existing projects. It heavily uses variadic templates to provide automatisation of binding commands with functions and nice API. Small usage example below:
 ```c++
-void someFunction(int x, float y, const std::string& z) {
+void func1_ptr(const std::string& name) {
+    std::cout << "Hello " << name << "!" << std::endl;
+}
+
+std::function<void(float)> func2_wrapper = [](float x) {
+    std::cout << x << "^2 = " << x*x << std::endl;
+}
+
+auto func3_lambda = [](int x, float y, const std::string& z) {
     std::cout << x << y << z << std::endl;
 }
 
 /* ... */
 
-// Create console object
 CommandConsole cmd;
-// Push command "some_command" binded to `someFunction(...)` with basic
-// as basic parser which reads arguments as (int, float, string)
-cmd.push("some_command", someFunction, Parser::BasicParser::parse<int, float, std::string>);
-// Test console by executing command
-cmd.execute("some_command 1 3.14 hello world"); // invokes someFunction(1, 3.14f, "hello world")
-```
 
+cmd.push("func1", func_ptr);      // default parser, types are infered from function pointer
+cmd.push("func2", func2_wrapper); // default parser, types are infered from std::function wrapper
+// to use lambda, either wrap it in std::function or provide valid parser
+cmd.push("func3", func3_lambda, Parser::BasicParser::parse<int, float, std::string>);
+
+cmd.execute("func1 John"); // func1_ptr("John")
+cmd.execute("func2 9.0f"); // func2_wrapper(9.0f)
+cmd.execute("func3 0 3.14 \"hello world\""); // func3_lambda(0, 3.14f, "hello world")
+```
 
 
 ### Requirements

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <functional>
 #include <map>
 
@@ -35,8 +36,10 @@ class CommandConsole {
                 (name_str != std::string::npos) ?
                     ((name_end == std::string::npos ? command.length() : name_end) - name_str) : 0;
 
-            std::string cmd_name = (name_len > 0) ? command.substr(name_str, name_len)      : "";
-            std::string cmd_args = (name_len > 0) ? command.substr(name_str + name_len + 1) : "";
+            std::size_t args_pos = std::min(name_str + name_len + 1, command.length());
+
+            std::string cmd_name = (name_len > 0) ? command.substr(name_str, name_len) : "";
+            std::string cmd_args = (name_len > 0) ? command.substr(args_pos)           : "";
 
             if(_command_parsers.count(cmd_name) > 0)
                 _command_parsers[cmd_name](cmd_args)(); // get parser (with binded function), bind arguments and execute

@@ -6,6 +6,10 @@
 
 
 // Test functions
+void helloWorld() {
+    std::cout << "Hello world" << std::endl;
+}
+
 void print_1(const std::string& str) {
     std::cout << "'" << str << "'" << std::endl;
 }
@@ -49,6 +53,7 @@ int main() {
 
 
     // Bind commands with default parser (function pointers or std::function wrappers only!)
+    cmd.push("helloworld", helloWorld);
     cmd.push("print", print_1);
     cmd.push("mult",  mult_f);
 
@@ -62,6 +67,8 @@ int main() {
 
 
     // Executing commands
+    cmd.execute("helloworld"); // hw()
+    cmd.execute("helloworld  321 32512"); // hw()
     cmd.execute("print something"); // print("something")
     cmd.execute("print something else"); //print("something else")
     cmd.execute(" \t\r  print2 \n something  \t something else  "); // print2("something", "something else")
