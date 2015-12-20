@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+#include <cctype>
 #include <functional>
 #include <tuple>
 
@@ -36,6 +38,43 @@ namespace Parser
             return CmdArgBinder::bind(func, tupledArgs);
         }
 
+        /**
+         * Basic argument parsing - returns tuple <arg0, rest>
+         */
+        std::tuple<std::string, std::string> parseFirstArg(const std::string& args) {
+            std::size_t i = 0, j = 0, k; // first argument is substring of range [i, j] in 'args'
+
+            // Skip whitespaces before argument
+            while(i < args.length() && std::isspace(args[i]))
+                ++i;
+
+            // If all characters are whitespaces, return empty argument
+            if(i == args.length())
+                return std::make_tuple(std::string(""), std::string(""));
+
+
+            if(args[i] == '\"') {
+                // If argument starts with opening ", then look for closing "
+                j = ++i;
+
+                while(j < args.length() && args[j] != '\"')
+                    ++j;
+
+            } else {
+                // If argument starts from anything else, it ends upon first whitespace
+                j = i + 1;
+
+                while(j < args.length() && !std::isspace(args[j]))
+                    ++j;
+            }
+
+            // Verify that k is in [0, args.length()] range and remove whitespaces from left side
+            k = std::min(j + 1, args.length());
+            while(k < args.length() && isspace(args[k]))
+                ++k;
+
+            return std::make_tuple(args.substr(i, j - i), args.substr(k));
+        }
 
 
         /***************************************************************************************/
@@ -53,6 +92,7 @@ namespace Parser
              */
             template<typename T, typename U, typename... Args>
             std::tuple<T, U, Args...> ArgToTupleSplitter(const std::string& str) {
+                /*
                 std::size_t delimiter_pos = str.find_first_of(' ');
                 std::string this_str = str, next_str = "";
 
@@ -60,10 +100,14 @@ namespace Parser
                     this_str = str.substr(0, delimiter_pos);
                     next_str = str.substr(delimiter_pos + 1);
                 }
+                */
+                std::tuple<std::string, std::string> parsedArgs = parseFirstArg(str);
+                std::string& this_arg  = std::get<0>(parsedArgs);
+                std::string& rest_args = std::get<1>(parsedArgs);
 
                 return std::tuple_cat(
-                    std::make_tuple(Parser::detail::CmdArgConvert<std::string, T>{}(this_str)),     // this argument
-                    ArgToTupleSplitter<U, Args...>(next_str)                                        // rest of arguments
+                    std::make_tuple(Parser::detail::CmdArgConvert<std::string, T>{}(this_arg)),     // this argument
+                    ArgToTupleSplitter<U, Args...>(rest_args)                                       // rest of arguments
                 );
             }
 
