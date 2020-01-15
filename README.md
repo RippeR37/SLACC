@@ -11,11 +11,11 @@ void func1_ptr(const std::string& name) {
 
 std::function<void(float)> func2_wrapper = [](float x) {
     std::cout << x << "^2 = " << x*x << std::endl;
-}
+};
 
 auto func3_lambda = [](int x, float y, const std::string& z) {
     std::cout << x << y << z << std::endl;
-}
+};
 
 /* ... */
 
